@@ -13,7 +13,7 @@
     "db:seed": "bun run src/seed.ts"
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.1.1",
+    "@hookform/resolvers": "3.1.0",
     "@payloadcms/db-mongodb": "^3.48.0",
     "@payloadcms/next": "^3.48.0",
     "@payloadcms/payload-cloud": "^3.48.0",

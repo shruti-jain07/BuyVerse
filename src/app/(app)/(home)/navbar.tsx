@@ -8,6 +8,8 @@ import { usePathname } from "next/navigation";
 import { NavbarSidebar } from "./navbar-sidebar";
 import { useState } from "react";
 import { MenuIcon } from "lucide-react";
+import { useTRPC } from "@/trpc/client";
+import {useQuery} from "@tanstack/react-query";
 const poppins=Poppins({
     subsets:["latin"],
     weight:["700"],
@@ -49,7 +51,10 @@ const navbarItems=[
 export const Navbar=()=>{
     const pathname=usePathname();
     const [isSidebarOpen,setIsSidebarOpen]=useState(false);
-    return(
+    
+    const trpc=useTRPC();
+    const session=useQuery(trpc.auth.session.queryOptions())
+        return(
         <nav className="h-13 flex border-b justify-between font-medium bg-white">
             <Link href="/" className="pl-2 flex items-center gap-1">
             <Image src="/images/BuyVerse_Logo.png" alt="BuyVerse Logo" width={50} height={90} className="rounded-full"/>
@@ -72,6 +77,21 @@ export const Navbar=()=>{
                 ))}
             </div>
 
+                {session.data?.user?(
+                    <div className="hidden lg:flex">
+                        <Button
+                asChild
+                variant="secondary"
+                className="border-l border-t-0 border-b-0 border-r-0 px-12 h-full rounded-none
+                bg-black text-white hover:bg-gray-600 hover:text-white transition-colors text-lg"
+                >
+                    <Link href="/admin"
+                    >
+                    Dashboard
+                    </Link>
+                </Button>
+                    </div>
+                ):(
             <div className="hidden lg:flex">
                 <Button
                 asChild
@@ -95,7 +115,8 @@ export const Navbar=()=>{
                     </Link>
                 </Button>
             </div>
-            
+            )}
+
             <div className="flex lg:hidden items-center justify-center">
                 <Button 
                 variant="ghost"

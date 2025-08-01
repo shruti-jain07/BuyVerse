@@ -4,10 +4,7 @@ export const Footer = () => {
      <div className="flex flex-col items-center ">
         <span className="text-lg font-semibold">BuyVerse</span>
         <span className="text-sm text-gray-600">One Verse.Infinite Choices.</span>
-
      </div>
-     
-    
    </footer>
   )
 }

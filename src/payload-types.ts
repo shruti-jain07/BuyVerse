@@ -193,7 +193,6 @@ export interface Product {
   description?: string | null;
   price: number;
   discountPrice?: number | null;
-  currency?: ('INR' | 'USD' | 'EUR') | null;
   stock?: number | null;
   isAvailable?: boolean | null;
   category?: (string | null) | Category;
@@ -330,7 +329,6 @@ export interface ProductsSelect<T extends boolean = true> {
   description?: T;
   price?: T;
   discountPrice?: T;
-  currency?: T;
   stock?: T;
   isAvailable?: T;
   category?: T;

@@ -20,12 +20,7 @@ export const Products: CollectionConfig = {
             name: "discountPrice",
             type: "number",
         },
-        {
-            name: "currency",
-            type: "select",
-            options: ["INR", "USD", "EUR"],
-            defaultValue: "INR",
-        },
+        
         {
             name: "stock",
             type: "number",

@@ -1,7 +1,7 @@
-import { useQueryStates, parseAsArrayOf, parseAsString, parseAsStringLiteral } from "nuqs";
-const sortValues = ["Recommended", "Trending", "Fresh & Popular"] as const;
-export const params = {
-    sort: parseAsStringLiteral(sortValues).withDefault("Recommended"),
+import {createLoader,parseAsArrayOf,parseAsString, parseAsStringLiteral} from "nuqs/server";
+export const sortValues=["Recommended","Trending","Fresh & Popular"] as const;
+const params={
+    sort:parseAsStringLiteral(sortValues).withDefault("Recommended"),
     minPrice: parseAsString
         .withOptions({
             clearOnDefault: true,
@@ -18,7 +18,4 @@ export const params = {
         })
         .withDefault([]),
 }
-export const useProductFilters = () => {
-    return useQueryStates(params)
-}
-
+export const loadProductFilters=createLoader(params);

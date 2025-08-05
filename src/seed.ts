@@ -1,14 +1,70 @@
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
+import configPromise from '@payload-config';
+import { getPayload } from 'payload';
 const categories=[
     {
         name:"All",
         slug:"all",
-    }
+        color:"#FFFFFF",
+        subcategories:[],
+    },
+    {
+    name: "Home & Living",
+    slug: "home-living",
+    color: "#4CAF50",
+    subcategories: [
+      { name: "Furniture", slug: "furniture" },
+      { name: "Decor & Lighting", slug: "decor-lighting" },
+      { name: "Kitchen Essentials", slug: "kitchen-essentials" },
+    ],
+  },
+  {
+    name: "Books & Stationery",
+    slug: "books-stationery",
+    color: "#FF9800",
+    subcategories: [
+      { name: "Fiction", slug: "fiction" },
+      { name: "Academic & Exam Prep", slug: "academic-exam-prep" },
+      { name: "Office Supplies", slug: "office-supplies" },
+    ],
+  },
+  {
+    name: "Sports & Outdoors",
+    slug: "sports-outdoors",
+    color: "#3F51B5",
+    subcategories: [
+      { name: "Fitness Equipment", slug: "fitness-equipment" },
+      { name: "Camping & Hiking", slug: "camping-hiking" },
+      { name: "Cycling Gear", slug: "cycling-gear" },
+    ],
+  },
 ]
 const seed =async() => {
   const payload = await getPayload({
      config: configPromise,
+   })
+
+const adminTenant=await payload.create({
+  collection:"tenants",
+  data:{
+    name:"admin",
+    slug:"admin",
+    stripeAccountId:"admin"
+  }
+})
+
+   await payload.create({
+    collection:"users",
+    data:{
+        email:"admin@gmail.com",
+        password:"demo",
+        roles:["super-admin"],
+        username:"admin",
+        tenants:[
+         {
+            tenant: adminTenant.id,
+          }
+        ]
+    }
    })
  for(const category of categories){
     const parentCategory=await payload.create({
@@ -19,8 +75,8 @@ const seed =async() => {
         color:category.color,
         parent:null,
     }
-    }),
-    for (const subCategory of category.subcategories||[]){
+    })
+    for (const subCategory of category.subcategories || []){
         await payload.create({
             collection:"categories",
             data:{

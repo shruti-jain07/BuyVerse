@@ -2,6 +2,7 @@
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import {multiTenantPlugin} from "@payloadcms/plugin-multi-tenant"
 import path from 'path'
 import { buildConfig } from 'payload'
 
@@ -37,6 +38,15 @@ export default buildConfig({
   sharp,
   plugins: [
     payloadCloudPlugin(),
+    multiTenantPlugin({
+      collections:{
+        products:{},
+      },
+      tenantsArrayField:{
+        includeDefaultField:false,
+      },
+      userHasAccessToAllTenants:(user)=>Boolean(user?.roles?.includes("super-admin"))
+    })
     // storage-adapter-placeholder
   ],
 })

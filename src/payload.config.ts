@@ -13,6 +13,7 @@ import { Media } from './collections/Media'
 import { Categories } from './collections/Categories'
 import { Products } from './collections/Products'
 import { Tags } from './collections/Tags'
+import { Tenants } from './collections/Tenants'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
@@ -23,7 +24,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media,Categories,Products,Tags],
+  collections: [Users, Media,Categories,Products,Tags,Tenants],
   cookiePrefix:"buyverse",
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',

@@ -5,7 +5,7 @@ import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import {multiTenantPlugin} from "@payloadcms/plugin-multi-tenant"
 import path from 'path'
 import { buildConfig } from 'payload'
-
+import { Config } from './payload-types'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
@@ -15,6 +15,8 @@ import { Categories } from './collections/Categories'
 import { Products } from './collections/Products'
 import { Tags } from './collections/Tags'
 import { Tenants } from './collections/Tenants'
+import { VariantAttributes } from './collections/VariantAttributes'
+import { VariantOptions } from './collections/VariantOptions'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
@@ -25,7 +27,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media,Categories,Products,Tags,Tenants],
+  collections: [Users, Media,Categories,Products,Tags,Tenants,VariantAttributes,VariantOptions],
   cookiePrefix:"buyverse",
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
@@ -38,7 +40,7 @@ export default buildConfig({
   sharp,
   plugins: [
     payloadCloudPlugin(),
-    multiTenantPlugin({
+    multiTenantPlugin<Config>({
       collections:{
         products:{},
       },

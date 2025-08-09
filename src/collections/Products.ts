@@ -20,7 +20,7 @@ export const Products: CollectionConfig = {
             name: "discountPrice",
             type: "number",
         },
-        
+
         {
             name: "stock",
             type: "number",
@@ -37,7 +37,7 @@ export const Products: CollectionConfig = {
             relationTo: "categories",
             hasMany: false,
         },
-         {
+        {
             name: "tags",
             type: "relationship",
             relationTo: "tags",
@@ -53,6 +53,70 @@ export const Products: CollectionConfig = {
             type: "select",
             options: ["30-day", "14-day", "7-day", "3-day", "1-day", "No Refunds"],
             defaultValue: "14-day"
-        }
-    ]
-}
+        },
+        {
+            name: "variants",
+            type: "array",
+            fields: [
+                {
+          name: "label", 
+          type: "text",
+          required: true,
+          admin: {
+        description: "Display label like 'Red / Large'",
+      },
+        },
+                {
+                    name: "options",
+                    type: "relationship",
+                    relationTo: "variant-options",
+                    hasMany: true,
+                },
+                {
+                    name: "price",
+                    type: "number",
+                },
+                {
+                    name: "stock",
+                    type: "number",
+                },
+                
+               
+            ],
+        },
+    ],
+
+    hooks: {
+  beforeValidate: [
+    async ({ data }) => {
+      if (data?.variants && Array.isArray(data.variants)) {
+        data.variants = data.variants.map((variant: any) => {
+          // Filter out invalid options safely
+          variant.options = (variant.options || []).filter((opt: any) => {
+            if (!opt) return false;
+            if (typeof opt === "string") return true; // ID case
+            return !!opt.label; // populated object case
+          });
+
+          // Normalize label
+          if (variant.label) {
+            variant.label = variant.label.trim();
+          }
+
+          // Fallback price
+          if (variant.price == null || variant.price === "") {
+            variant.price = data.price;
+          }
+
+          return variant;
+        });
+      }
+      return data;
+    },
+  ],
+},
+
+};
+
+
+

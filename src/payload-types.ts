@@ -73,6 +73,8 @@ export interface Config {
     products: Product;
     tags: Tag;
     tenants: Tenant;
+    'variant-attributes': VariantAttribute;
+    'variant-options': VariantOption;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -89,6 +91,8 @@ export interface Config {
     products: ProductsSelect<false> | ProductsSelect<true>;
     tags: TagsSelect<false> | TagsSelect<true>;
     tenants: TenantsSelect<false> | TenantsSelect<true>;
+    'variant-attributes': VariantAttributesSelect<false> | VariantAttributesSelect<true>;
+    'variant-options': VariantOptionsSelect<false> | VariantOptionsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -234,6 +238,18 @@ export interface Product {
   tags?: (string | Tag)[] | null;
   image?: (string | null) | Media;
   refundPolicy?: ('30-day' | '14-day' | '7-day' | '3-day' | '1-day' | 'No Refunds') | null;
+  variants?:
+    | {
+        /**
+         * Display label like 'Red / Large'
+         */
+        label: string;
+        options?: (string | VariantOption)[] | null;
+        price?: number | null;
+        stock?: number | null;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -245,6 +261,37 @@ export interface Tag {
   id: string;
   name: string;
   products?: (string | Product)[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "variant-options".
+ */
+export interface VariantOption {
+  id: string;
+  label: string;
+  attribute: string | VariantAttribute;
+  tenant: string | Tenant;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "variant-attributes".
+ */
+export interface VariantAttribute {
+  id: string;
+  name: string;
+  /**
+   * Unique key like 'size', 'color'. Used in code/programming.
+   */
+  slug: string;
+  tenant: string | Tenant;
+  /**
+   * Should this be a required attribute when adding variants?
+   */
+  isRequired?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -278,6 +325,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'tenants';
         value: string | Tenant;
+      } | null)
+    | ({
+        relationTo: 'variant-attributes';
+        value: string | VariantAttribute;
+      } | null)
+    | ({
+        relationTo: 'variant-options';
+        value: string | VariantOption;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -398,6 +453,15 @@ export interface ProductsSelect<T extends boolean = true> {
   tags?: T;
   image?: T;
   refundPolicy?: T;
+  variants?:
+    | T
+    | {
+        label?: T;
+        options?: T;
+        price?: T;
+        stock?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }
@@ -421,6 +485,29 @@ export interface TenantsSelect<T extends boolean = true> {
   image?: T;
   stripeAccountId?: T;
   stripeDetailsSubmitted?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "variant-attributes_select".
+ */
+export interface VariantAttributesSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  tenant?: T;
+  isRequired?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "variant-options_select".
+ */
+export interface VariantOptionsSelect<T extends boolean = true> {
+  label?: T;
+  attribute?: T;
+  tenant?: T;
   updatedAt?: T;
   createdAt?: T;
 }

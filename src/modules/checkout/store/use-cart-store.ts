@@ -1,65 +1,104 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware"
+
+interface CartItem {
+  productId: string;
+  variantId?: string;
+  price?: number;
+  quantity?: number;
+}
+
 interface TenantCart {
-    productIds: string[];
+  items: CartItem[];
 }
 interface CartState {
-    tenantCarts: Record<string, TenantCart>;
-    addProduct: (tenantSlug: string, productId: string) => void;
-    removeProduct: (tenantSlug: string, productId: string) => void;
-    clearCart: (tenantSlug: string) => void;
-    clearAllCarts: () => void;
-    getCartByTenant: (tenantSlug: string) => string[];
+  tenantCarts: Record<string, TenantCart>;
+  addProduct: (tenantSlug: string, item: CartItem) => void;
+  removeProduct: (tenantSlug: string, productId: string, variantId?: string) => void;
+  clearCart: (tenantSlug: string) => void;
+  clearAllCarts: () => void;
+  getCartByTenant: (tenantSlug: string) => CartItem[];
 }
 export const useCartStore = create<CartState>()(
-    persist(
-        (set, get) => ({
-            tenantCarts: {},
-            addProduct: (tenantSlug, productId) =>
-                set((state) => ({
-                    tenantCarts: {
-                        ...state.tenantCarts,
-                        [tenantSlug]: {
-                            productIds: [
-                                ...(state.tenantCarts[tenantSlug]?.productIds || []),
-                                productId,
-                            ]
-                        }
-                    }
-                })),
+  persist(
+    (set, get) => ({
+      tenantCarts: {},
+      addProduct: (tenantSlug, item) =>
+        set((state) => {
+          const existingItems = state.tenantCarts[tenantSlug]?.items || [];
+          const itemIndex = existingItems.findIndex(
+            (cartItem) =>
+              cartItem.productId === item.productId &&
+              cartItem.variantId === item.variantId
+          );
 
-            removeProduct: (tenantSlug, productId) =>
-                set((state) => ({
-                    tenantCarts: {
-                        ...state.tenantCarts,
-                        [tenantSlug]: {
-                            productIds: state.tenantCarts[tenantSlug]?.productIds.filter(
-                                (id) => id !== productId
-                            ) || [],
-                        }
-                    }
-                })),
+          let newItems;
 
-            clearCart: (tenantSlug) =>
-                set((state) => ({
-                    tenantCarts: {
-                        ...state.tenantCarts,
-                        [tenantSlug]: {
-                            productIds: [],
-                        }
-                    }
-                })),
+          if (itemIndex !== -1) {
+            const existingItem = existingItems[itemIndex];
+            if (!existingItem) {
+              console.error("existingItem is undefined even though itemIndex != -1");
+              // fallback to just add new item
+              newItems = [...existingItems, item];
+            } else {
+              newItems = [...existingItems];
+              newItems[itemIndex] = {
+                productId: existingItem.productId,
+                variantId: existingItem.variantId,
+                price: existingItem.price,
+                quantity: (existingItem.quantity ?? 1) + (item.quantity ?? 1),
+              };
+            }
+          } else {
+            newItems = [...existingItems, item];
+          }
 
-            clearAllCarts: () =>
-                set({
-                    tenantCarts: {},
-                }),
-            getCartByTenant: (tenantSlug) =>
-                get().tenantCarts[tenantSlug]?.productIds || [],
+          return {
+            tenantCarts: {
+              ...state.tenantCarts,
+              [tenantSlug]: {
+                ...state.tenantCarts[tenantSlug],
+                items: newItems,
+              },
+            },
+          };
         }),
-        {
-            name: "buyverse-cart",
-            storage: createJSONStorage(() => localStorage),
-        }
-    )
-)
+
+      removeProduct: (tenantSlug, productId, variantId) =>
+        set((state) => ({
+          tenantCarts: {
+            ...state.tenantCarts,
+            [tenantSlug]: {
+              items: (state.tenantCarts[tenantSlug]?.items || []).filter(
+                (cartItem) =>
+                  !(cartItem.productId === productId && cartItem.variantId === variantId)
+
+              ),
+            }
+          }
+        })),
+
+      clearCart: (tenantSlug) =>
+        set((state) => ({
+          tenantCarts: {
+            ...state.tenantCarts,
+            [tenantSlug]: {
+              items: [],
+            }
+          }
+        })),
+
+      clearAllCarts: () =>
+        set({
+          tenantCarts: {},
+        }),
+
+      getCartByTenant: (tenantSlug) =>
+        get().tenantCarts[tenantSlug]?.items || [],
+    }),
+    {
+      name: "buyverse-cart",
+      storage: createJSONStorage(() => localStorage),
+    }
+  )
+);

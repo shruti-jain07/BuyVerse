@@ -8,33 +8,43 @@ export const useCart=(tenantSlug:string)=>{
         clearAllCarts
     }=useCartStore();
 
-    const productIds=getCartByTenant(tenantSlug)
-
-    const toggleProduct=(productId:string)=>{
-        if(productIds.includes(productId)){
-            removeProduct(tenantSlug,productId);
-        }
-        else{
-            addProduct(tenantSlug,productId);
-        }
+    const items = getCartByTenant(tenantSlug);
+    
+    const toggleProduct = (productId: string, variantId?: string, price?: number, quantity?:number) => {
+    const exists = items.some(
+      (item) =>
+        item.productId === productId &&
+        item.variantId === variantId
+    );
+    if (exists) {
+      removeProduct(tenantSlug, productId, variantId);
+    } else {
+      addProduct(tenantSlug, { productId, variantId, price, quantity });
     }
+  };
 
-    const isProductInCart=(productId:string)=>{
-        return productIds.includes(productId);
-    }
+    const isProductInCart = (productId: string, variantId?: string) => {
+    return items.some(
+      (item) =>
+        item.productId === productId &&
+        item.variantId === variantId
+    );
+  };
 
     const clearTenantCart=()=>{
         clearCart(tenantSlug);
     }
 
-    return{
-        productIds,
-        addProduct:(productId:string)=>addProduct(tenantSlug,productId),
-        removeProduct:(productId:string)=>removeProduct(tenantSlug,productId),
-        clearCart:clearTenantCart,
-        clearAllCarts,
-        toggleProduct,
-        isProductInCart,
-        totalItems:productIds.length,
-    };
-}
+    return {
+    items, // now returns CartItem[]
+    addProduct: (item: { productId: string; variantId?: string; price?: number; quantity?: number }) =>
+      addProduct(tenantSlug, item),
+    removeProduct: (productId: string, variantId?: string) =>
+      removeProduct(tenantSlug, productId, variantId),
+    clearCart: clearTenantCart,
+    clearAllCarts,
+    toggleProduct,
+    isProductInCart,
+    totalItems: items.reduce((sum, item) => sum + (item.quantity ?? 1), 0),
+  };
+};

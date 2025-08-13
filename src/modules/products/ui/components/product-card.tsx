@@ -38,7 +38,7 @@ export const ProductCard=({
                 <Image
                     alt={name}
                     fill
-                    src={imageUrl||"/images/auth-bg.png"}
+                    src={imageUrl||"/images/placeholder.png"}
                     className="object-cover"
                 />
             </div>

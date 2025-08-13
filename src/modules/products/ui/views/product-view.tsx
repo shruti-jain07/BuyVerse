@@ -12,22 +12,26 @@ import { Progress } from "@/components/ui/progress";
 import { VariantSelector, Variant } from "@/modules/products/ui/components/variant-selector";
 //import { CartButton } from "../components/cart-button";
 import dynamic from "next/dynamic";
-const CartButton=dynamic(
-    ()=>import("../components/cart-button").then(
-        (mod)=>mod.CartButton,
+import { useCart } from "@/modules/checkout/hooks/use-cart";
+const CartButton = dynamic(
+    () => import("../components/cart-button").then(
+        (mod) => mod.CartButton,
 
     ),
     {
-        ssr:false,
-        loading:()=><Button disabled className="flex-1 bg-[##EEF1DA] text-black" >Add to Cart</Button>
+        ssr: false,
+        loading: () => <Button disabled className="flex-1 bg-[##EEF1DA] text-black" ></Button>
     },
 )
 interface Props {
     productId: string;
     tenantSlug: string;
+    variantId?: string;
+    quantity?:number;
 };
 
-export const ProductView = ({ productId, tenantSlug }: Props) => {
+export const ProductView = ({ productId, tenantSlug, variantId }: Props) => {
+    const cart = useCart(tenantSlug);
     const trpc = useTRPC();
     const { data } = useSuspenseQuery(trpc.products.getOne.queryOptions({ id: productId }))
     const [selectedVariant, setSelectedVariant] = useState<any | null>(null);
@@ -39,13 +43,14 @@ export const ProductView = ({ productId, tenantSlug }: Props) => {
             attribute: opt.attribute ? { name: opt.attribute.name } : undefined,
         })),
     }));
+    const [quantity, setQuantity] = useState(1); // default quantity is 1
 
     return (
         <div className="px-4 lg:px-12 py-10">
             <div className="border rounded-sm bg-white overflow-hidden">
                 <div className="relative aspect-[3.9] border-b">
                     <Image
-                        src={data.image?.url || "/images/auth-bg.png"}
+                        src={data.image?.url || "/images/.png"}
                         alt={data.name}
                         fill
                         className="object-cover"
@@ -130,10 +135,34 @@ export const ProductView = ({ productId, tenantSlug }: Props) => {
                     <div className="col-span-2 ">
                         <div className="border-t lg:border-t-0 lg:border-l h-full">
                             <div className="flex flex-col gap-4 p-6 border-b">
+                                <div className="flex items-center gap-2">
+                                    <span>Quantity</span>
+                                    <button
+                                        className="px-2 py-1 border rounded"
+                                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                                    >
+                                        -
+                                    </button>
+                                    <input
+                                        type="number"
+                                        min={1}
+                                        value={quantity}
+                                        onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))}
+                                        className="w-12 text-center border rounded"
+                                    />
+                                    <button
+                                        className="px-2 py-1 border rounded"
+                                        onClick={() => setQuantity(quantity + 1)}
+                                    >
+                                        +
+                                    </button>
+                                </div>
                                 <div className="flex flex-row items-center gap-2">
                                     <CartButton
                                         productId={productId}
                                         tenantSlug={tenantSlug}
+                                        variantId={selectedVariant?.id}
+                                        quantity={quantity}
                                     />
                                     <Button
                                         className="size-12"

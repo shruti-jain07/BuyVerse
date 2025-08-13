@@ -38,11 +38,10 @@ export const VariantSelector = ({ variants, onVariantChange }: Props) => {
     setAttributeNames(Array.from(attrs));
   }, [variants]);
 
-  // Match selected options to correct variant
+  // Match variant based on selected options
   useEffect(() => {
   if (!variants || attributeNames.length === 0) return;
 
-  // Only match if all attributes are selected
   const allSelected = attributeNames.every(attr => !!selectedOptions[attr]);
 
   if (!allSelected) {
@@ -64,9 +63,6 @@ export const VariantSelector = ({ variants, onVariantChange }: Props) => {
     onVariantChange?.(match ?? null);
   }
 }, [selectedOptions, variants, attributeNames]);
-
-
-
 
   const handleOptionChange = (attribute: string, label: string) => {
     setSelectedOptions((prev) => ({

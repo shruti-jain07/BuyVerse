@@ -72,7 +72,7 @@ export const CheckoutItem = ({
           <p>Price-{formatCurrency(price)}</p>
         </div>
         <div className="font-medium">
-          <p className="text-lg">Total {formatCurrency(finalPrice)}</p>
+          <p className="text-lg">Item Total {formatCurrency(finalPrice)}</p>
         </div>
         <button
           className="underline font-medium cursor-pointer"

@@ -1,4 +1,4 @@
-import z from "zod"; 
+import z from "zod";
 import { baseProcedure, createTRPCRouter } from "@/trpc/init";
 import { Media, Tenant } from "@/payload-types";
 import { TRPCError } from "@trpc/server";
@@ -32,7 +32,7 @@ export const checkoutRouter = createTRPCRouter({
         });
       }
 
-    console.log("Incoming cart items:", input.items);
+      console.log("Incoming cart items:", input.items);
 
       const enrichedDocs = input.items.map((cartItem) => {
         const doc = data.docs.find((d) => d.id === cartItem.productId);
@@ -42,14 +42,14 @@ export const checkoutRouter = createTRPCRouter({
 
         const variant = cartItem.variantId
           ? (doc.variants || []).find(
-              (v: any) =>
-                String(v.id) === String(cartItem.variantId) ||
-                String(v._id) === String(cartItem.variantId)
-            )
+            (v: any) =>
+              String(v.id) === String(cartItem.variantId) ||
+              String(v._id) === String(cartItem.variantId)
+          )
           : undefined;
 
         const unitPrice = Number(variant?.price ?? doc.price ?? 0);
-        const quantity = Math.max(1,Math.floor(cartItem.quantity ?? 1));
+        const quantity = Math.max(1, Math.floor(cartItem.quantity ?? 1));
 
         return {
           ...doc,
@@ -61,23 +61,24 @@ export const checkoutRouter = createTRPCRouter({
             name: v.name ?? v.label ?? "Variant",
           })),
           selectedVariant: variant
-            ? { ...variant, 
+            ? {
+              ...variant,
               name: (variant as any).name ?? variant.label ?? "Variant",
-              price: Number(variant.price ?? doc.price ?? 0) }
+              price: Number(variant.price ?? doc.price ?? 0)
+            }
             : null,
           quantity,
           unitPrice,
-          finalPrice: Math.round(unitPrice * quantity * 100) / 100
-,
+          finalPrice: Math.round(unitPrice * quantity * 100) / 100,
+
         };
       });
-
+      const total = Math.round(
+        enrichedDocs.reduce((acc, p) => acc + (Number(p.finalPrice) || 0), 0) * 100
+      ) / 100;
       return {
         docs: enrichedDocs,
-        totalPrice: enrichedDocs.reduce(
-          (acc, p) => acc + (Number(p.finalPrice) || 0),
-          0
-        ),
+        total
       };
     }),
 });

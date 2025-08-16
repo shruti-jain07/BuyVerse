@@ -75,6 +75,7 @@ export interface Config {
     tenants: Tenant;
     'variant-attributes': VariantAttribute;
     'variant-options': VariantOption;
+    orders: Order;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -93,6 +94,7 @@ export interface Config {
     tenants: TenantsSelect<false> | TenantsSelect<true>;
     'variant-attributes': VariantAttributesSelect<false> | VariantAttributesSelect<true>;
     'variant-options': VariantOptionsSelect<false> | VariantOptionsSelect<true>;
+    orders: OrdersSelect<false> | OrdersSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -297,6 +299,33 @@ export interface VariantAttribute {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "orders".
+ */
+export interface Order {
+  id: string;
+  user: string | User;
+  tenantSlug: string;
+  items: {
+    productId: string;
+    variantId?: string | null;
+    name: string;
+    variantLabel?: string | null;
+    quantity: number;
+    /**
+     * Price per item at the time of purchase
+     */
+    unitPrice: number;
+    finalPrice: number;
+    id?: string | null;
+  }[];
+  totalAmount: number;
+  status: 'pending' | 'paid' | 'failed' | 'canceled';
+  stripeCheckoutSessionId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -333,6 +362,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'variant-options';
         value: string | VariantOption;
+      } | null)
+    | ({
+        relationTo: 'orders';
+        value: string | Order;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -510,6 +543,31 @@ export interface VariantOptionsSelect<T extends boolean = true> {
   tenant?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "orders_select".
+ */
+export interface OrdersSelect<T extends boolean = true> {
+  user?: T;
+  tenantSlug?: T;
+  items?:
+    | T
+    | {
+        productId?: T;
+        variantId?: T;
+        name?: T;
+        variantLabel?: T;
+        quantity?: T;
+        unitPrice?: T;
+        finalPrice?: T;
+        id?: T;
+      };
+  totalAmount?: T;
+  status?: T;
+  stripeCheckoutSessionId?: T;
+  createdAt?: T;
+  updatedAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

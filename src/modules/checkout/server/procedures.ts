@@ -1,9 +1,154 @@
 import z from "zod";
-import { baseProcedure, createTRPCRouter } from "@/trpc/init";
+import { baseProcedure, createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { Media, Tenant } from "@/payload-types";
 import { TRPCError } from "@trpc/server";
+import Stripe from "stripe";
+import { CheckoutMetadata, ProductMetadata } from "../types";
+import { stripe } from "@/lib/stripe";
+import { generateTenantURL } from "@/lib/utils";
 
+const getVariantId = (v: any) => String(v?.id ?? v?._id ?? "");
+
+
+const toPaise = (amount: number | null | undefined) => {
+  const n = Number(amount);
+  if (!Number.isFinite(n) || n < 0) {
+    throw new TRPCError({ code: "BAD_REQUEST", message: "Invalid price" });
+  }
+  return Math.round(n * 100); // INR -> paise
+};
 export const checkoutRouter = createTRPCRouter({
+  
+  purchase:protectedProcedure
+     .input(
+    z.object({
+      items: z.array(
+        z.object({
+          productId: z.string().min(1),
+          variantId: z.string().optional(),
+          quantity: z.number().min(1)
+        })
+      ),
+      tenantSlug: z.string().min(1),
+    })
+  )
+  
+    .mutation(async ({ ctx, input }) => {
+      const productIds = Array.from(new Set(input.items.map(i => i.productId)));
+    const products = await ctx.payload.find({
+      collection: "products",
+      depth: 2,
+      where: {
+        and: [
+          { id: { 
+             in:productIds
+              } 
+          },
+          { "tenant.slug": {
+             equals: input.tenantSlug 
+              } 
+          }
+        ]
+      }
+    });
+
+      if(products.totalDocs!==productIds.length){
+        throw new TRPCError({code:"NOT_FOUND",message:"Products not found"})
+      }
+
+      const tenantsData=await ctx.payload.find({
+        collection:"tenants",
+        limit:1,
+        pagination:false,
+        where:{
+          slug:{
+            equals:input.tenantSlug,
+          }
+        }
+      })
+
+      const tenant=tenantsData.docs[0]
+      
+      if(!tenant){
+        throw new TRPCError({
+          code:"NOT_FOUND",
+          message:"Tenant not found"
+        })
+      }
+      const productMap = new Map(products.docs.map((p: any) => [String(p.id), p]));
+      
+      const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] =
+  input.items.map((item) => {
+    const product: any = productMap.get(item.productId);
+    if (!product) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Product not found" });
+    }
+
+    const variant = item.variantId
+      ? (product.variants ?? []).find((v: any) => getVariantId(v) === String(item.variantId))
+      : null;
+
+    if (item.variantId && !variant) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Variant not found" });
+    }
+
+    const rawPrice = variant?.price ?? product.price;
+    if (rawPrice == null) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: `Price missing for product ${product.id} variant ${item.variantId ?? "default"}`,
+      });
+    }
+
+    return {
+      quantity: item.quantity,
+      price_data: {
+        unit_amount: toPaise(rawPrice),
+        currency: "INR",
+        product_data: {
+          name: variant
+            ? `${product.name} - ${variant.label ?? "Variant"}`
+            : product.name,
+          metadata: {
+            stripeAccountId: String(tenant.stripeAccountId),
+            id: String(product.id),
+            name: String(product.name),
+            variantId: variant ? getVariantId(variant) : undefined,
+            variantName: variant?.label ?? "",
+            
+            price: Number(rawPrice),
+          } as ProductMetadata,
+        },
+      },
+    };
+  });
+
+      
+
+      const checkout=await stripe.checkout.sessions.create({
+        customer_email:ctx.session.user.email,
+        success_url:`${process.env.NEXT_PUBLIC_APP_URL}/tenants/${input.tenantSlug}/checkout?success=true`,
+        cancel_url:`${process.env.NEXT_PUBLIC_APP_URL}/tenants/${input.tenantSlug}/checkout?cancel=true`,
+        mode:"payment",
+        line_items:lineItems,
+        invoice_creation:{
+          enabled:true,
+        },
+        metadata:{
+          userId:ctx.session.user.id,
+           tenantSlug: input.tenantSlug,
+        } as CheckoutMetadata
+      });
+
+      if(!checkout.url){
+        throw new TRPCError({
+          code:"INTERNAL_SERVER_ERROR",
+          message:"Failed to create checkout session"
+        })
+      }
+
+      return{url:checkout.url}
+    }),
   getProducts: baseProcedure
     .input(
       z.object({
@@ -58,7 +203,7 @@ export const checkoutRouter = createTRPCRouter({
           variants: (doc.variants || []).map((v: any) => ({
             ...v,
             price: Number(v.price ?? doc.price ?? 0),
-            name: v.name ?? v.label ?? "Variant",
+            name:  v.label ?? "Variant",
           })),
           selectedVariant: variant
             ? {

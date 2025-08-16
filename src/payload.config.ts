@@ -17,6 +17,7 @@ import { Tags } from './collections/Tags'
 import { Tenants } from './collections/Tenants'
 import { VariantAttributes } from './collections/VariantAttributes'
 import { VariantOptions } from './collections/VariantOptions'
+import { Orders } from './collections/Orders'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
@@ -27,7 +28,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media,Categories,Products,Tags,Tenants,VariantAttributes,VariantOptions],
+  collections: [Users, Media,Categories,Products,Tags,Tenants,VariantAttributes,VariantOptions,Orders],
   cookiePrefix:"buyverse",
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',

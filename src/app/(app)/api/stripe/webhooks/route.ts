@@ -74,7 +74,7 @@ export async function POST(req: Request) {
                         data: {
                             stripeCheckoutSessionId: data.id,
                             user: user.id,
-                            tenantSlug,
+                            tenantSlug: String(tenantSlug),
                             status: "paid",
                             totalAmount: expandedSession.amount_total
                                 ? expandedSession.amount_total / 100

@@ -4,30 +4,55 @@ import { baseProcedure, createTRPCRouter } from "@/trpc/init";
 import { Category, Media, Tenant } from '@/payload-types';
 import { sortValues } from '../search-params';
 import { DEFAULT_LIMIT } from '@/constants';
-
+import {headers as getHeaders} from "next/headers";
 export const productsRouter = createTRPCRouter({
-    getOne: baseProcedure
-        .input(
-            z.object({
-                id:z.string(),
-            })
-        )
-        .query(async({ctx,input})=>{
-            const product=await ctx.payload.findByID({
-                collection:"products",
-                id:input.id,
-                depth:2,
-            })
-            return {
-                ...product,
-                image:product.image as Media | null,
-                tenant:product.tenant as Tenant &{image:Media|null},
-                variants: (product.variants || []).map(v => ({
-                    ...v,
-                    price: v.price ?? product.price ?? 0
-                }))
-            }
-        }),
+   getOne: baseProcedure
+  .input(z.object({ id: z.string() }))
+  .query(async ({ ctx, input }) => {
+    try {
+      const headers = await getHeaders(); // keep as Headers object
+      const session = await ctx.payload.auth({ headers });
+
+      const product = await ctx.payload.findByID({
+        collection: "products",
+        id: input.id,
+        depth: 2,
+      });
+
+      if (!product) throw new Error("Product not found");
+
+      let isPurchased = false;
+      if (session.user) {
+        const ordersData = await ctx.payload.find({
+          collection: "orders",
+          pagination: false,
+          limit: 1,
+          where: {
+            and: [
+              { "items.productId": { equals: input.id } },
+              { "user.id": { equals: session.user.id } }
+            ]
+          }
+        })
+        isPurchased = !!ordersData.docs?.[0];
+      }
+
+      return {
+        ...product,
+        isPurchased,
+        image: product.image as Media | null,
+        tenant: product.tenant as Tenant & { image: Media | null },
+        variants: (product.variants || []).map((v) => ({
+          ...v,
+          price: v.price ?? product.price ?? 0,
+        })),
+      };
+    } catch (err: any) {
+      console.error("getOne error:", err);
+      throw new Error(err?.message || "Unknown server error in getOne");
+    }
+  }),
+
     getMany: baseProcedure
         .input(z.object({
             cursor: z.number().default(1),

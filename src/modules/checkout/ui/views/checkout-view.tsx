@@ -19,7 +19,7 @@ interface Props {
 export const CheckoutView = ({ tenantSlug }: Props) => {
   const router=useRouter();
   const [states,setStates]=useCheckoutStates();
-  const { items, removeProduct, clearAllCarts,clearCart } = useCart(tenantSlug);
+  const { items, removeProduct,clearCart } = useCart(tenantSlug);
   const trpc = useTRPC();
 
   const { data, error, isLoading } = useQuery(
@@ -47,6 +47,7 @@ export const CheckoutView = ({ tenantSlug }: Props) => {
   useEffect(()=>{
     if(states.success)
     {
+      console.log("Triggered")
       setStates({success:false,cancel:false})
       clearCart();
       router.push("/products")
@@ -59,7 +60,7 @@ export const CheckoutView = ({ tenantSlug }: Props) => {
       clearCart();
       toast.warning("Invalid Cart Found, Cart Cleared");
     }
-  }, [error, clearAllCarts]);
+  }, [error]);
 
   if (isLoading) {
     return (

@@ -10,7 +10,6 @@ import { LinkIcon, StarIcon } from "lucide-react";
 import { Fragment, useState } from "react";
 import { Progress } from "@/components/ui/progress";
 import { VariantSelector, Variant } from "@/modules/products/ui/components/variant-selector";
-//import { CartButton } from "../components/cart-button";
 import dynamic from "next/dynamic";
 import { useCart } from "@/modules/checkout/hooks/use-cart";
 const CartButton = dynamic(
@@ -27,7 +26,7 @@ interface Props {
     productId: string;
     tenantSlug: string;
     variantId?: string;
-    quantity?:number;
+    quantity?: number;
 };
 
 export const ProductView = ({ productId, tenantSlug, variantId }: Props) => {
@@ -158,12 +157,13 @@ export const ProductView = ({ productId, tenantSlug, variantId }: Props) => {
                                     </button>
                                 </div>
                                 <div className="flex flex-row items-center gap-2">
-                                    <CartButton
-                                        productId={productId}
-                                        tenantSlug={tenantSlug}
-                                        variantId={selectedVariant?.id}
-                                        quantity={quantity}
-                                    />
+                                        <CartButton
+                                            isPurchased={data.isPurchased}
+                                            productId={productId}
+                                            tenantSlug={tenantSlug}
+                                            variantId={selectedVariant?.id}
+                                            quantity={quantity}
+                                        />
                                     <Button
                                         className="size-12"
                                         variant="elevated"

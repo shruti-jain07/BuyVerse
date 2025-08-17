@@ -1,10 +1,12 @@
 import type { CollectionConfig } from "payload";
 
+
 export const Orders: CollectionConfig = {
     slug: "orders",
     admin: {
         useAsTitle: "stripeCheckoutSessionId",
     },
+    
     fields:
         [
             {

@@ -17,11 +17,11 @@ interface CartState {
   removeProduct: (tenantSlug: string, productId: string, variantId?: string) => void;
   clearCart: (tenantSlug: string) => void;
   clearAllCarts: () => void;
-  getCartByTenant: (tenantSlug: string) => CartItem[];
+  
 }
 export const useCartStore = create<CartState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       tenantCarts: {},
       addProduct: (tenantSlug, item) =>
         set((state) => {
@@ -93,8 +93,7 @@ export const useCartStore = create<CartState>()(
           tenantCarts: {},
         }),
 
-      getCartByTenant: (tenantSlug) =>
-        get().tenantCarts[tenantSlug]?.items || [],
+  
     }),
     {
       name: "buyverse-cart",

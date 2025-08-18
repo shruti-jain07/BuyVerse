@@ -18,6 +18,7 @@ import { Tenants } from './collections/Tenants'
 import { VariantAttributes } from './collections/VariantAttributes'
 import { VariantOptions } from './collections/VariantOptions'
 import { Orders } from './collections/Orders'
+import { Reviews } from './collections/Reviews'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
@@ -28,7 +29,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media,Categories,Products,Tags,Tenants,VariantAttributes,VariantOptions,Orders],
+  collections: [Users, Media,Categories,Products,Tags,Tenants,VariantAttributes,VariantOptions,Orders,Reviews],
   cookiePrefix:"buyverse",
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',

@@ -111,7 +111,7 @@ export const Navbar = () => {
                     >
                         <Link href="/sign-up"
                             prefetch>
-                            Sign Up
+                            Start Selling
                         </Link>
                     </Button>
                 </div>

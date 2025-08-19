@@ -17,6 +17,9 @@ export const productsRouter = createTRPCRouter({
         collection: "products",
         id: input.id,
         depth: 2,
+        select:{
+                    content:false
+                }
       });
 
       if (!product) throw new Error("Product not found");
@@ -187,7 +190,10 @@ export const productsRouter = createTRPCRouter({
                 where,
                 sort,
                 page: input.cursor,
-                limit: input.limit
+                limit: input.limit,
+                select:{
+                    content:false
+                }
             });
             const dataWithSummarizedReviews=await Promise.all(
                 data.docs.map(async(doc)=>{

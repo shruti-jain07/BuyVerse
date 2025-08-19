@@ -63,7 +63,7 @@ export const SignInView = () => {
                 className="text-base border-none underline"
                 >
                   <Link prefetch href="/sign-up">
-                  Sign Up
+                  Start Selling
                   </Link>
                 </Button>
               </div>

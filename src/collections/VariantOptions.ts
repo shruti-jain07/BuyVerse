@@ -1,9 +1,17 @@
 import type { CollectionConfig } from "payload";
+import { isSuperAdmin } from "@/lib/access";
 
 export const VariantOptions: CollectionConfig = {
   slug: "variant-options",
+  access: {
+          read: () => true,
+          create: ({ req }) => isSuperAdmin(req.user),
+          update: ({ req }) => isSuperAdmin(req.user),
+          delete: ({ req }) => isSuperAdmin(req.user),
+      },
   admin: {
     useAsTitle: "label",
+    hidden:({user})=>!isSuperAdmin(user)
   },
   fields: [
     {

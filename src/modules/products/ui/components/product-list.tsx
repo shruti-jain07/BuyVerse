@@ -48,8 +48,8 @@ if(data.pages?.[0]?.docs.length===0){
                 imageUrl={product.image?.url}
                 tenantSlug={product.tenant?.slug}
                 tenantImageUrl={product.tenant?.image?.url}
-                reviewRating={3}
-                reviewCount={2}
+                reviewRating={product.reviewRating}
+                reviewCount={product.reviewCount}
                 price={product.price}
             />
            ))}

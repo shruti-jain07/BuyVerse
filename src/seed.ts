@@ -1,13 +1,14 @@
 import configPromise from '@payload-config';
 import { getPayload } from 'payload';
-const categories=[
-    {
-        name:"All",
-        slug:"all",
-        color:"#FFFFFF",
-        subcategories:[],
-    },
-    {
+import { stripe } from './lib/stripe';
+const categories = [
+  {
+    name: "All",
+    slug: "all",
+    color: "#FFFFFF",
+    subcategories: [],
+  },
+  {
     name: "Home & Living",
     slug: "home-living",
     color: "#4CAF50",
@@ -38,61 +39,63 @@ const categories=[
     ],
   },
 ]
-const seed =async() => {
+const seed = async () => {
   const payload = await getPayload({
-     config: configPromise,
-   })
-
-const adminTenant=await payload.create({
-  collection:"tenants",
-  data:{
-    name:"admin",
-    slug:"admin",
-    stripeAccountId:"admin"
-  }
-})
-
-   await payload.create({
-    collection:"users",
-    data:{
-        email:"admin@gmail.com",
-        password:"demo",
-        roles:["super-admin"],
-        username:"admin",
-        tenants:[
-         {
-            tenant: adminTenant.id,
-          }
-        ]
+    config: configPromise,
+  })
+  const adminAccount = await stripe.accounts.create({
+    type: "express",
+  })
+  const adminTenant = await payload.create({
+    collection: "tenants",
+    data: {
+      name: "admin",
+      slug: "admin",
+      stripeAccountId: adminAccount.id,
     }
-   })
- for(const category of categories){
-    const parentCategory=await payload.create({
-        collection:"categories",
-        data:{
-        name:category.name,
-        slug:category.slug,
-        color:category.color,
-        parent:null,
+  })
+
+  await payload.create({
+    collection: "users",
+    data: {
+      email: "admin@gmail.com",
+      password: "demo",
+      roles: ["super-admin"],
+      username: "admin",
+      tenants: [
+        {
+          tenant: adminTenant.id,
+        }
+      ]
     }
+  })
+  for (const category of categories) {
+    const parentCategory = await payload.create({
+      collection: "categories",
+      data: {
+        name: category.name,
+        slug: category.slug,
+        color: category.color,
+        parent: null,
+      }
     })
-    for (const subCategory of category.subcategories || []){
-        await payload.create({
-            collection:"categories",
-            data:{
-                name:subCategory.name,
-                slug:subCategory.slug,
-                parent:parentCategory.id,
-            },
-        })
+    for (const subCategory of category.subcategories || []) {
+      await payload.create({
+        collection: "categories",
+        data: {
+          name: subCategory.name,
+          slug: subCategory.slug,
+          parent: parentCategory.id,
+        },
+      })
     }
- }
+  }
 }
-try{
-await seed();
-console.log("Sedding Completed Successfully");
-process.exit(0);
-}catch (error){
-    console.error("error during Seeding:",error);
-    process.exit(1);
+try {
+  await seed();
+  console.log("Sedding Completed Successfully");
+  process.exit(0);
+} catch (error) {
+  console.error("error during Seeding:", error);
+  process.exit(1);
 }

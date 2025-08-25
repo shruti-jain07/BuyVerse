@@ -6,13 +6,13 @@ export const Products: CollectionConfig = {
     access:{
       create:({req})=>{
         if(isSuperAdmin(req.user)) return true
-        
-        const tenant=req.user?.tenants?.[0]?.tenant as Tenant;
+        const tenant = req.user?.tenants?.[0]?.tenant as Tenant;
         return Boolean(tenant?.stripeDetailsSubmitted);
       }
     },
     admin: {
     useAsTitle: "name", 
+    description:"You must verify your account before creating products"
   },
     fields: [
         {

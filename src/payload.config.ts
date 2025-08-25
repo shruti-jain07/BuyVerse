@@ -29,6 +29,9 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    components:{
+      beforeNavLinks:["@/components/stripe-verify#StripeVerify"]
+    }
   },
   collections: [Users, Media,Categories,Products,Tags,Tenants,VariantAttributes,VariantOptions,Orders,Reviews],
   cookiePrefix:"buyverse",

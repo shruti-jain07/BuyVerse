@@ -1,105 +1,107 @@
-import {z} from "zod";
+import { z } from "zod";
 import { useState } from "react";
-import {useForm} from "react-hook-form";
-import {useMutation, useQueryClient} from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import {zodResolver} from "@hookform/resolvers/zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { ReviewsGetOneOutput } from "@/modules/reviews/types";
 import { useTRPC } from "@/trpc/client";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Form,
+import {
+    Form,
     FormControl,
-    FormField, 
+    FormField,
     FormItem,
-    FormMessage } from "@/components/ui/form";
-import { StarPicker} from "@/components/star-picker"
-interface Props{
-    productId:string;
-    initialData?:ReviewsGetOneOutput
+    FormMessage
+} from "@/components/ui/form";
+import { StarPicker } from "@/components/star-picker"
+interface Props {
+    productId: string;
+    initialData?: ReviewsGetOneOutput
 }
 
-const formSchema=z.object({
-    rating:z.number().min(1,{message:"Rating is Required"}).max(5),
-    description:z.string().min(1,{message:"Description is Required"})
+const formSchema = z.object({
+    rating: z.number().min(1, { message: "Rating is Required" }).max(5),
+    description: z.string().min(1, { message: "Description is Required" })
 })
-export const ReviewForm=({productId,initialData}:Props)=>{
-    const [isPreview,setIsPreview]=useState(!!initialData);
-    const trpc=useTRPC()
-    const queryClient=useQueryClient()
-    const createReview=useMutation(trpc.reviews.create.mutationOptions({
-        onSuccess:()=>{
+export const ReviewForm = ({ productId, initialData }: Props) => {
+    const [isPreview, setIsPreview] = useState(!!initialData);
+    const trpc = useTRPC()
+    const queryClient = useQueryClient()
+    const createReview = useMutation(trpc.reviews.create.mutationOptions({
+        onSuccess: () => {
             queryClient.invalidateQueries(trpc.reviews.getOne.queryOptions({
                 productId,
             }))
             setIsPreview(true)
         },
-        onError:(error)=>{
+        onError: (error) => {
             toast.error(error.message)
         },
     }))
-    const updateReview=useMutation(trpc.reviews.update.mutationOptions({
-         onSuccess:()=>{
+    const updateReview = useMutation(trpc.reviews.update.mutationOptions({
+        onSuccess: () => {
             queryClient.invalidateQueries(trpc.reviews.getOne.queryOptions({
                 productId,
             }))
             setIsPreview(true)
         },
-        onError:(error)=>{
+        onError: (error) => {
             toast.error(error.message)
         },
     }))
-    const form=useForm<z.infer<typeof formSchema>>({
-        resolver:zodResolver(formSchema),
-        defaultValues:{
-            rating:initialData?.rating??0,
-            description:initialData?.description??"",
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            rating: initialData?.rating ?? 0,
+            description: initialData?.description ?? "",
         }
     })
-    const onSubmit=(values:z.infer<typeof formSchema>)=>{
-        if(initialData){
+    const onSubmit = (values: z.infer<typeof formSchema>) => {
+        if (initialData) {
             updateReview.mutate({
-                reviewId:initialData.id,
-                rating:values.rating,
-                description:values.description
+                reviewId: initialData.id,
+                rating: values.rating,
+                description: values.description
             })
-        }else{
+        } else {
             createReview.mutate({
                 productId,
-                rating:values.rating,
-                description:values.description
+                rating: values.rating,
+                description: values.description
             })
         }
     }
-    return(
+    return (
         <Form {...form}>
-            <form 
-            className="flex flex-col gap-y-4"
-            onSubmit={form.handleSubmit(onSubmit)}
+            <form
+                className="flex flex-col gap-y-4"
+                onSubmit={form.handleSubmit(onSubmit)}
             >
                 <p className="font-medium">
-                    {isPreview ?"Your Rating":"Liked it? Give it a Rating"}
+                    {isPreview ? "Your Rating" : "Liked it? Give it a Rating"}
                 </p>
                 <FormField
                     control={form.control}
                     name="rating"
-                    render={({field})=>(
+                    render={({ field }) => (
                         <FormItem>
                             <FormControl>
                                 <StarPicker
-                                value={field.value}
-                                onChange={field.onChange}
-                                disabled={isPreview}
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    disabled={isPreview}
                                 />
                             </FormControl>
-                            <FormMessage/>
+                            <FormMessage />
                         </FormItem>
                     )}
                 />
                 <FormField
                     control={form.control}
                     name="description"
-                    render={({field})=>(
+                    render={({ field }) => (
                         <FormItem>
                             <FormControl>
                                 <Textarea
@@ -108,33 +110,56 @@ export const ReviewForm=({productId,initialData}:Props)=>{
                                     {...field}
                                 />
                             </FormControl>
-                            <FormMessage/>
+                            <FormMessage />
                         </FormItem>
                     )}
                 />
                 {!isPreview && (
                     <Button
-                     variant="elevated"
-                     disabled={createReview.isPending || updateReview.isPending}
-                     type="submit"
-                     size="lg"
-                     className="bg-black text-white hover:bg-[#EEF1DA] hover:text-black w-fit"
+                        variant="elevated"
+                        disabled={createReview.isPending || updateReview.isPending}
+                        type="submit"
+                        size="lg"
+                        className="bg-black text-white hover:bg-[#EEF1DA] hover:text-black w-fit"
                     >
-                        {initialData ? "Update Review":"Post Review"}
+                        {initialData ? "Update Review" : "Post Review"}
                     </Button>
                 )}
             </form>
             {isPreview && (
                 <Button
-                 onClick={()=>setIsPreview(false)}
-                 size="lg"
-                 type="button"
-                 variant="elevated"
-                 className="w-fit mt-4"
+                    onClick={() => setIsPreview(false)}
+                    size="lg"
+                    type="button"
+                    variant="elevated"
+                    className="w-fit mt-4"
                 >
                     Edit
                 </Button>
             )}
         </Form>
+    )
+}
+export const ReviewFormSkeleton = () => {
+    return (
+        <div className="flex flex-col gap-y-4">
+            <p className="font-medium">Liked it? Give it a Rating</p>
+            <StarPicker
+                disabled
+            />
+            <Textarea
+                placeholder="want to leave a written review"
+                disabled
+            />
+            <Button
+                variant="elevated"
+                disabled
+                type="button"
+                size="lg"
+                className="bg-black text-white hover:bg-[#EEF1DA] hover:text-black w-fit"
+            >
+                Post Review
+            </Button>
+        </div>
     )
 }

@@ -80,7 +80,6 @@ export const checkoutRouter = createTRPCRouter({
       const products = await ctx.payload.find({
         collection: "products",
         depth: 2,
-
         where: {
           and: [
             {
@@ -91,6 +90,11 @@ export const checkoutRouter = createTRPCRouter({
             {
               "tenant.slug": {
                 equals: input.tenantSlug
+              }
+            },
+            {
+              isArchived:{
+                not_equals:true,
               }
             }
           ]
@@ -228,11 +232,24 @@ export const checkoutRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       const productIds = Array.from(new Set(input.items.map((i) => i.productId)));
-
       const data = await ctx.payload.find({
         collection: "products",
         depth: 2,
-        where: { id: { in: productIds } },
+        where: { 
+          and:[
+            {
+              id: { 
+                    in: productIds 
+                } ,
+            },
+            {
+              isArchived:{
+                not_equals:true
+              }
+            }
+          ],
+         
+        },
       });
 
       if (data.totalDocs !== productIds.length) {

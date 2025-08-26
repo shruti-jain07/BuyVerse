@@ -238,9 +238,22 @@ export interface Product {
   id: string;
   tenant?: (string | null) | Tenant;
   name: string;
-  description?: string | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   price: number;
-  discountPrice?: number | null;
   stock?: number | null;
   isAvailable?: boolean | null;
   category?: (string | null) | Category;
@@ -250,7 +263,29 @@ export interface Product {
   /**
    * Protected Content only visible to customers after purchase.Add Product documentation,downloadable files,getting started guides,and bonus materials.Supports Markdown Formatting
    */
-  content?: string | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * If Checked,this product will not be shown on the public storefront
+   */
+  isPrivate?: boolean | null;
+  /**
+   * If Checked,this product will be archived
+   */
+  isArchived?: boolean | null;
   variants?:
     | {
         /**
@@ -514,7 +549,6 @@ export interface ProductsSelect<T extends boolean = true> {
   name?: T;
   description?: T;
   price?: T;
-  discountPrice?: T;
   stock?: T;
   isAvailable?: T;
   category?: T;
@@ -522,6 +556,8 @@ export interface ProductsSelect<T extends boolean = true> {
   image?: T;
   refundPolicy?: T;
   content?: T;
+  isPrivate?: T;
+  isArchived?: T;
   variants?:
     | T
     | {

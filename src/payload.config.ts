@@ -1,7 +1,7 @@
 // storage-adapter-import-placeholder
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
-import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { lexicalEditor} from '@payloadcms/richtext-lexical'
 import {multiTenantPlugin} from "@payloadcms/plugin-multi-tenant"
 import path from 'path'
 import { buildConfig } from 'payload'
@@ -49,6 +49,7 @@ export default buildConfig({
     multiTenantPlugin<Config>({
       collections:{
         products:{},
+       
       },
       tenantsArrayField:{
         includeDefaultField:false,

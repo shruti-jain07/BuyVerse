@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { formatCurrency, generateTenantURL } from "@/lib/utils";
 import Link from "next/link";
+import { RichText} from "@payloadcms/richtext-lexical/react"
 import { StarRating } from "@/components/star-rating";
 import { Button } from "@/components/ui/button";
 import { CheckIcon, LinkIcon, StarIcon } from "lucide-react";
@@ -51,7 +52,7 @@ export const ProductView = ({ productId, tenantSlug, variantId }: Props) => {
             <div className="border rounded-sm bg-white overflow-hidden">
                 <div className="relative aspect-[3.9] border-b">
                     <Image
-                        src={data.image?.url || "/images/.png"}
+                        src={data.image?.url || "/images/placeholder.png"}
                         alt={data.name}
                         fill
                         className="object-cover"
@@ -114,7 +115,7 @@ export const ProductView = ({ productId, tenantSlug, variantId }: Props) => {
 
                         <div className="p-6">
                             {data.description ? (
-                                <p>{data.description}</p>
+                                <RichText data={data.description}/>
                             ) : (
                                 <p className="font-medium text-muted-foreground italic">No Description Provided.</p>
                             )}
@@ -224,3 +225,19 @@ export const ProductView = ({ productId, tenantSlug, variantId }: Props) => {
     )
 }
 
+export const ProductViewSkeleton=()=>{
+    return(
+        <div className="px-4 lg:px-12 py-10">
+            <div className="border rounded-sm bg-white overflow-hidden">
+                <div className="relative aspect-[3.9] border-b">
+                    <Image
+                        src={ "/images/placeholder.png"}
+                        alt="Placeholder"
+                        fill
+                        className="object-cover"
+                    />
+                </div>
+                </div>
+                </div>
+    )
+}

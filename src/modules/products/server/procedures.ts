@@ -118,12 +118,12 @@ export const productsRouter = createTRPCRouter({
                     not_equals: true,
                 }
             };
-            let sort: Sort = "-createdAt";
+            let sort: Sort = "createdAt";
             if (input.sort === "Recommended") {
-                sort = "-createdAt"
+                sort = "createdAt"
             }
             if (input.sort === "Trending") {
-                sort = "-updatedAt"
+                sort = "-name"
             }
             if (input.sort === "Fresh & Popular") {
                 sort = "-createdAt"

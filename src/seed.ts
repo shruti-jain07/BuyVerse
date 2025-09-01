@@ -8,34 +8,54 @@ const categories = [
     color: "#FFFFFF",
     subcategories: [],
   },
-  {
-    name: "Home & Living",
-    slug: "home-living",
+{
+    name: "Ebooks & Writing",
+    slug: "ebooks-writing",
     color: "#4CAF50",
     subcategories: [
-      { name: "Furniture", slug: "furniture" },
-      { name: "Decor & Lighting", slug: "decor-lighting" },
-      { name: "Kitchen Essentials", slug: "kitchen-essentials" },
+      { name: "Fiction", slug: "fiction" },
+      { name: "Non-fiction", slug: "non-fiction" },
+      { name: "Guides & Tutorials", slug: "guides-tutorials" },
     ],
   },
   {
-    name: "Books & Stationery",
-    slug: "books-stationery",
+    name: "Courses & Learning",
+    slug: "courses-learning",
     color: "#FF9800",
     subcategories: [
-      { name: "Fiction", slug: "fiction" },
-      { name: "Academic & Exam Prep", slug: "academic-exam-prep" },
-      { name: "Office Supplies", slug: "office-supplies" },
+      { name: "Programming", slug: "programming" },
+      { name: "Design & Creativity", slug: "design-creativity" },
+      { name: "Business & Marketing", slug: "business-marketing" },
     ],
   },
   {
-    name: "Sports & Outdoors",
-    slug: "sports-outdoors",
+    name: "Music & Audio",
+    slug: "music-audio",
     color: "#3F51B5",
     subcategories: [
-      { name: "Fitness Equipment", slug: "fitness-equipment" },
-      { name: "Camping & Hiking", slug: "camping-hiking" },
-      { name: "Cycling Gear", slug: "cycling-gear" },
+      { name: "Beats & Instrumentals", slug: "beats-instrumentals" },
+      { name: "Podcasts", slug: "podcasts" },
+      { name: "Sound Effects", slug: "sound-effects" },
+    ],
+  },
+  {
+    name: "Design Assets",
+    slug: "design-assets",
+    color: "#E91E63",
+    subcategories: [
+      { name: "Graphics & Illustrations", slug: "graphics-illustrations" },
+      { name: "UI Kits & Templates", slug: "ui-kits-templates" },
+      { name: "Fonts & Icons", slug: "fonts-icons" },
+    ],
+  },
+  {
+    name: "Software & Tools",
+    slug: "software-tools",
+    color: "#009688",
+    subcategories: [
+      { name: "Apps & Plugins", slug: "apps-plugins" },
+      { name: "Scripts & Code", slug: "scripts-code" },
+      { name: "Automation Tools", slug: "automation-tools" },
     ],
   },
 ]
@@ -93,7 +113,7 @@ const seed = async () => {
 }
 try {
   await seed();
-  console.log("Sedding Completed Successfully");
+  console.log("Seeding Completed Successfully");
   process.exit(0);
 } catch (error) {
   console.error("error during Seeding:", error);

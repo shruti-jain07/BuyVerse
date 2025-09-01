@@ -49,12 +49,12 @@ export const ProductCard=({
                     <Image
                         alt={tenantSlug}
                         src={tenantImageUrl}
-                        width={16}
-                        height={16}
-                        className="rounded-full border shrink-0 size-[16px]"
+                        width={25}
+                        height={25}
+                        className="rounded-full border shrink-0 size-[25px]"
                     />
                 )}
-                <p className="text-sm underline font-medium">{tenantSlug}</p>
+                <p className="text-md underline font-medium">{tenantSlug}</p>
             </div>
             {reviewCount>0 &&(
                 <div className="flex items-center gap-1">
@@ -79,6 +79,6 @@ export const ProductCard=({
 
 export const ProductCardSkeleton=()=>{
     return(
-        <div className="w-full aspect-3/4 bg-neutral-200 rounded-lg animate-pulse"/>
+        <div className="w-full aspect-4/5 bg-neutral-200 rounded-lg animate-pulse"/>
     )
 }

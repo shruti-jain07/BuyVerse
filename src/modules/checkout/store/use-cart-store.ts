@@ -96,7 +96,7 @@ export const useCartStore = create<CartState>()(
   
     }),
     {
-      name: "buyverse-cart",
+      name: "shopverse-cart",
       storage: createJSONStorage(() => localStorage),
     }
   )

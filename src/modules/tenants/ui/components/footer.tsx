@@ -10,9 +10,9 @@ export const Footer=()=>{
         <footer className="border-t font-medium bg-white">
             <div className="max-w-(--breakpoint-xl) mx-auto flex items-center h-full gap-2 px-4 py-6 lg:px-12">
                 <p className="text-xl">Powered By</p>
-                <Link href="/">
+                <Link href={process.env.NEXT_PUBLIC_APP_URL!}>
                     <span className={cn("text-2xl font-semibold",poppins.className)}>
-                        BuyVerse
+                        ShopVerse
                     </span>
                 </Link>
             </div>

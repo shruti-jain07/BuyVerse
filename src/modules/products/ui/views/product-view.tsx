@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { formatCurrency, generateTenantURL } from "@/lib/utils";
 import Link from "next/link";
-import { RichText} from "@payloadcms/richtext-lexical/react"
+import { RichText } from "@payloadcms/richtext-lexical/react"
 import { StarRating } from "@/components/star-rating";
 import { Button } from "@/components/ui/button";
 import { CheckIcon, LinkIcon, StarIcon } from "lucide-react";
@@ -17,6 +17,7 @@ import { toast } from "sonner";
 const CartButton = dynamic(
     () => import("../components/cart-button").then(
         (mod) => mod.CartButton,
+
 
     ),
     {
@@ -31,10 +32,11 @@ interface Props {
     quantity?: number;
 };
 
+
 export const ProductView = ({ productId, tenantSlug, variantId }: Props) => {
     const cart = useCart(tenantSlug);
     const trpc = useTRPC();
-    const[isCopied,setIsCopied]=useState(false)
+    const [isCopied, setIsCopied] = useState(false)
     const { data } = useSuspenseQuery(trpc.products.getOne.queryOptions({ id: productId }))
     const [selectedVariant, setSelectedVariant] = useState<any | null>(null);
     const mappedVariants: Variant[] = (data?.variants || []).map((v) => ({
@@ -47,15 +49,16 @@ export const ProductView = ({ productId, tenantSlug, variantId }: Props) => {
     }));
     const [quantity, setQuantity] = useState(1); // default quantity is 1
 
+
     return (
         <div className="px-4 lg:px-12 py-10">
             <div className="border rounded-sm bg-white overflow-hidden">
-                <div className="relative aspect-[3.9] border-b">
+                <div className="relative aspect-[4/5] border-b">
                     <Image
                         src={data.image?.url || "/images/placeholder.png"}
                         alt={data.name}
                         fill
-                        className="object-cover"
+                        className="object-cover" 
                     />
                 </div>
                 <div className="grid grid-cols-1 lg:grid-cols-6">
@@ -73,7 +76,9 @@ export const ProductView = ({ productId, tenantSlug, variantId }: Props) => {
                                     </p>
                                 </div>
 
+
                             </div>
+
 
                             <div className="px-6 py-4 flex items-center justify-center lg:border-r">
                                 <Link href={generateTenantURL(tenantSlug)}
@@ -91,6 +96,7 @@ export const ProductView = ({ productId, tenantSlug, variantId }: Props) => {
                                     <p className="text-xl underline font-medium">{data.tenant.name}</p>
                                 </Link>
 
+
                             </div>
                             <div className="hidden lg:flex px-6 py-4 items-center justify-center">
                                 <div className="flex items-center gap-2">
@@ -98,10 +104,11 @@ export const ProductView = ({ productId, tenantSlug, variantId }: Props) => {
                                         rating={data.reviewRating}
                                         iconClassName="size-4"
                                     />
-                                <p className="text-base font-medium">{data.reviewCount} Rating</p>
+                                    <p className="text-base font-medium">{data.reviewCount} Rating</p>
                                 </div>
                             </div>
                         </div>
+
 
                         <div className="block lg:hidden px-6 py-4 items-center justify-center border-b">
                             <div className="flex items-center gap-2">
@@ -113,15 +120,18 @@ export const ProductView = ({ productId, tenantSlug, variantId }: Props) => {
                             </div>
                         </div>
 
+
                         <div className="p-6">
                             {data.description ? (
-                                <RichText data={data.description}/>
+                                <RichText data={data.description} />
                             ) : (
                                 <p className="font-medium text-muted-foreground italic">No Description Provided.</p>
                             )}
                         </div>
 
+
                         <div className="border-t border-black my-6 mt-6 px-6 py-4 space-y-4">
+
 
                             <h3 className="text-xl font-semibold">Choose Your Variant</h3>
                             <VariantSelector
@@ -129,8 +139,10 @@ export const ProductView = ({ productId, tenantSlug, variantId }: Props) => {
                                 onVariantChange={(variant) => setSelectedVariant(variant)}
                             />
 
+
                         </div>
                     </div>
+
 
                     <div className="col-span-2 ">
                         <div className="border-t lg:border-t-0 lg:border-l h-full">
@@ -158,13 +170,13 @@ export const ProductView = ({ productId, tenantSlug, variantId }: Props) => {
                                     </button>
                                 </div>
                                 <div className="flex flex-row items-center gap-2">
-                                        <CartButton
-                                            isPurchased={data.isPurchased}
-                                            productId={productId}
-                                            tenantSlug={tenantSlug}
-                                            variantId={selectedVariant?.id}
-                                            quantity={quantity}
-                                        />
+                                    <CartButton
+                                        isPurchased={data.isPurchased}
+                                        productId={productId}
+                                        tenantSlug={tenantSlug}
+                                        variantId={selectedVariant?.id}
+                                        quantity={quantity}
+                                    />
                                     <Button
                                         className="size-12"
                                         variant="elevated"
@@ -172,13 +184,13 @@ export const ProductView = ({ productId, tenantSlug, variantId }: Props) => {
                                             setIsCopied(true)
                                             navigator.clipboard.writeText(window.location.href)
                                             toast.success("URL copied to clipboard")
-                                            setTimeout(()=>{
+                                            setTimeout(() => {
                                                 setIsCopied(false)
-                                            },1000)
-                                         }}
+                                            }, 1000)
+                                        }}
                                         disabled={isCopied}
                                     >
-                                       {isCopied ? <CheckIcon/>: <LinkIcon />}
+                                        {isCopied ? <CheckIcon /> : <LinkIcon />}
                                     </Button>
                                 </div>
                                 <p className="text-center font-medium">
@@ -189,6 +201,7 @@ export const ProductView = ({ productId, tenantSlug, variantId }: Props) => {
                                 </p>
                             </div>
 
+
                             <div className="p-6 ">
                                 <div className="flex items-center justify-between">
                                     <h3 className="text-xl font-medium">Ratings</h3>
@@ -198,6 +211,7 @@ export const ProductView = ({ productId, tenantSlug, variantId }: Props) => {
                                         <p className="text-base ">{data.reviewCount} ratings</p>
                                     </div>
                                 </div>
+
 
                                 <div
                                     className="grid grid-cols-[auto_1fr_auto] gap-3 mt-4"
@@ -213,6 +227,7 @@ export const ProductView = ({ productId, tenantSlug, variantId }: Props) => {
                                                 {data.ratingDistribution[stars]}%
                                             </div>
 
+
                                         </Fragment>
                                     ))}
                                 </div>
@@ -225,19 +240,20 @@ export const ProductView = ({ productId, tenantSlug, variantId }: Props) => {
     )
 }
 
-export const ProductViewSkeleton=()=>{
-    return(
+
+export const ProductViewSkeleton = () => {
+    return (
         <div className="px-4 lg:px-12 py-10">
             <div className="border rounded-sm bg-white overflow-hidden">
                 <div className="relative aspect-[3.9] border-b">
                     <Image
-                        src={ "/images/placeholder.png"}
+                        src={"/images/placeholder.png"}
                         alt="Placeholder"
                         fill
                         className="object-cover"
                     />
                 </div>
-                </div>
-                </div>
+            </div>
+        </div>
     )
 }

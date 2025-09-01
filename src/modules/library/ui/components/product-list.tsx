@@ -6,9 +6,7 @@ import { DEFAULT_LIMIT } from "@/constants";
 import { Button } from "@/components/ui/button";
 import { InboxIcon } from "lucide-react";
 
-
-export const ProductList=()=>{
-   
+export const ProductList=()=>{   
     const trpc=useTRPC();
     const {data,hasNextPage,isFetchingNextPage,fetchNextPage}
     =useSuspenseInfiniteQuery(trpc.library.getMany.infiniteQueryOptions({

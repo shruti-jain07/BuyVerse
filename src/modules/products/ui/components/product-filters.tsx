@@ -34,7 +34,7 @@ const ProductFilter=({title,className,children}:Props)=>{
 
 export const ProductFilters=()=>{
     const [filters,setFilters]=useProductFilters();
-    const hasAnyilters=Object.entries(filters).some(([key,value])=>{
+    const hasAnyFilters=Object.entries(filters).some(([key,value])=>{
         if(key==="sort") return false;
         if(Array.isArray(value)){
             return value.length>0;
@@ -58,7 +58,7 @@ export const ProductFilters=()=>{
         <div className="border rounded-md bg-white">
             <div className="p-4 border-b flex items-center justify-between">
                 <p className="font-medium">Filters</p>
-                {hasAnyilters && (
+                {hasAnyFilters && (
                 <button className="underline" onClick={()=>onClear()} type="button">
                     Clear
                 </button>

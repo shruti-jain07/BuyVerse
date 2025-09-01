@@ -34,7 +34,7 @@ export default buildConfig({
     }
   },
   collections: [Users, Media,Categories,Products,Tags,Tenants,VariantAttributes,VariantOptions,Orders,Reviews],
-  cookiePrefix:"buyverse",
+  cookiePrefix:"shopverse",
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

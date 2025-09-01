@@ -10,8 +10,8 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "BuyVerse",
-  description: "One Verse.Infinite Choices.",
+  title: "ShopVerse",
+  description: "WWhere creators launch and sell digital products.",
 };
 
 export default function RootLayout({

@@ -58,7 +58,7 @@ export const SignUpView = () => {
             >
               <div className='flex items-center justify-between mb-8'>
                 <Link href="/">
-                <span className={cn("text-2xl font-semibold",poppins.className)}>BuyVerse</span>
+                <span className={cn("text-2xl font-semibold",poppins.className)}>ShopVerse</span>
                 </Link>
                 <Button
                 asChild
@@ -72,7 +72,7 @@ export const SignUpView = () => {
                 </Button>
               </div>
               <h1 className="text-4xl font-medium">
-                Join over 1,000+ vendors building their business on BuyVerse.
+                Join over 1,000+ vendors building their business on ShopVerse.
               </h1>
               <FormField
               name="username"
@@ -137,7 +137,7 @@ export const SignUpView = () => {
         </div>
         <div className="h-screen w-full lg:col-span-2 hidden lg:block"
         style={{
-          backgroundImage:"url('images/auth-bg.png')",
+          backgroundImage:"url('images/authpage-bg.png')",
           backgroundSize:"cover",
           backgroundPosition:"center",
           backgroundRepeat:"no-repeat"

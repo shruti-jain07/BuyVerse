@@ -42,9 +42,8 @@ const NavbarItem = ({
 const navbarItems = [
     { href: "/", children: "Home" },
     { href: "/about", children: "About" },
-    { href: "/features", children: "Features" },
     { href: "/pricing", children: "Pricing" },
-    { href: "/contact", children: "Contact" },
+    
 ];
 
 
@@ -57,15 +56,15 @@ export const Navbar = () => {
     return (
         <nav className="h-13 flex border-b justify-between font-medium bg-white">
             <Link href="/" className="pl-2 flex items-center gap-1">
-                <Image src="/images/BuyVerse_Logo.png" alt="BuyVerse Logo" width={50} height={90} className="rounded-full" />
-                <span className={cn("text-3xl font-semibold", poppins.className)}>BuyVerse</span>
+                <Image src="/images/shopverse_logo.png" alt="ShopVerse Logo" width={50} height={90} className="rounded-full" />
+                <span className={cn("text-3xl font-semibold", poppins.className)}>ShopVerse</span>
             </Link>
             <NavbarSidebar
                 items={navbarItems}
                 open={isSidebarOpen}
                 onOpenChange={setIsSidebarOpen}
             />
-            <div className="items-center gap-4 hidden lg:flex">
+            <div className="items-center gap-8 hidden lg:flex ml-auto ">
                 {navbarItems.map((item) => (
                     <NavbarItem
                         key={item.href}
@@ -82,7 +81,7 @@ export const Navbar = () => {
                     <Button
                         asChild
                         variant="secondary"
-                        className="border-l border-t-0 border-b-0 border-r-0 px-12 h-full rounded-none
+                        className=" border-l border-t-0 border-b-0 border-r-0 ml-5 px-12 h-full rounded-none
                 bg-black text-white hover:bg-gray-600 hover:text-white transition-colors text-lg"
                     >
                         <Link href="/admin"
@@ -96,7 +95,7 @@ export const Navbar = () => {
                     <Button
                         asChild
                         variant="secondary"
-                        className="border-l border-t-0 border-b-0 border-r-0 px-12 h-full rounded-none
+                        className="border-l border-t-0 border-b-0 border-r-0 px-12 ml-5 h-full rounded-none
                 bg-white hover:bg-gray-600 hover:text-white transition-colors text-lg"
                     >
                         <Link prefetch href="/sign-in">

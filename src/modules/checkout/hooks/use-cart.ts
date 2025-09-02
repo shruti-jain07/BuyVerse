@@ -10,7 +10,7 @@ export const useCart = (tenantSlug: string) => {
 
   const items = useCartStore(useShallow((state)=>state.tenantCarts[tenantSlug]?.items||[]));
 
-  const toggleProduct = useCallback((productId: string, variantId?: string, price?: number, quantity?: number) => {
+  const toggleProduct = useCallback((productId: string, variantId?: string, price?: number) => {
     const exists = items.some(
       (item) =>
         item.productId === productId &&
@@ -19,7 +19,7 @@ export const useCart = (tenantSlug: string) => {
     if (exists) {
       removeProduct(tenantSlug, productId, variantId);
     } else {
-      addProduct(tenantSlug, { productId, variantId, price, quantity });
+      addProduct(tenantSlug, { productId, variantId, price });
     }
   },[addProduct,removeProduct,items,tenantSlug]);
 
@@ -36,7 +36,7 @@ export const useCart = (tenantSlug: string) => {
   },[tenantSlug,clearCart])
 
   const handleAddProduct = useCallback(
-  (item: { productId: string; variantId?: string; price?: number; quantity?: number }) => {
+  (item: { productId: string; variantId?: string; price?: number;}) => {
     addProduct(tenantSlug, item);
   },
   [addProduct, tenantSlug]
@@ -57,6 +57,6 @@ const handleRemoveProduct = useCallback(
     clearAllCarts,
     toggleProduct,
     isProductInCart,
-    totalItems: items.reduce((sum, item) => sum + (item.quantity ?? 1), 0),
+    totalItems: items.length,
   };
 };

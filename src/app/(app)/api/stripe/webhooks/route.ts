@@ -95,13 +95,13 @@ export async function POST(req: Request) {
                                     variantId: product.metadata?.variantId || null,
                                     name: product.name,
                                     variantLabel: product.metadata?.variantName || null,
-                                    quantity: item.quantity || 1,
+                                    
                                     unitPrice: item.price.unit_amount
-                                        ? item.price.unit_amount / 100
+                                        ? Math.round(item.price.unit_amount) / 100
                                         : 0,
                                     finalPrice:
-                                        (item.price.unit_amount ? item.price.unit_amount / 100 : 0) *
-                                        (item.quantity || 1),
+                                        item.price.unit_amount ? Math.round(item.price.unit_amount) / 100 : 0
+                                        
                                 };
                             }),
                         },

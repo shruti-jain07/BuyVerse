@@ -5,7 +5,7 @@ interface CartItem {
   productId: string;
   variantId?: string;
   price?: number;
-  quantity?: number;
+  
 }
 
 interface TenantCart {
@@ -46,7 +46,7 @@ export const useCartStore = create<CartState>()(
                 productId: existingItem.productId,
                 variantId: existingItem.variantId,
                 price: existingItem.price,
-                quantity: (existingItem.quantity ?? 1) + (item.quantity ?? 1),
+                
               };
             }
           } else {

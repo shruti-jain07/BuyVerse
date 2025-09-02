@@ -151,7 +151,7 @@ export const VariantSelector = ({ variants, onVariantChange }: Props) => {
           </p>
         ) : (
           <p className="text-sm text-muted-foreground">
-            Please select all options
+            select preferred option
           </p>
         )}
       </div>

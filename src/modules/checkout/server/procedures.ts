@@ -68,7 +68,7 @@ export const checkoutRouter = createTRPCRouter({
           z.object({
             productId: z.string().min(1),
             variantId: z.string().optional(),
-            quantity: z.number().min(1)
+            
           })
         ),
         tenantSlug: z.string().min(1),
@@ -156,7 +156,7 @@ export const checkoutRouter = createTRPCRouter({
           }
 
           return {
-            quantity: item.quantity,
+            
             price_data: {
               unit_amount: toPaise(rawPrice),
               currency: "INR",
@@ -228,7 +228,7 @@ export const checkoutRouter = createTRPCRouter({
           z.object({
             productId: z.string(),
             variantId: z.string().optional(),
-            quantity: z.number().optional(),
+           
           })
         ),
       })
@@ -279,7 +279,7 @@ export const checkoutRouter = createTRPCRouter({
           : undefined;
 
         const unitPrice = Number(variant?.price ?? doc.price ?? 0);
-        const quantity = Math.max(1, Math.floor(cartItem.quantity ?? 1));
+        
 
         return {
           ...doc,
@@ -297,9 +297,9 @@ export const checkoutRouter = createTRPCRouter({
               price: Number(variant.price ?? doc.price ?? 0)
             }
             : null,
-          quantity,
+          
           unitPrice,
-          finalPrice: Math.round(unitPrice * quantity * 100) / 100,
+          finalPrice:unitPrice,
 
         };
       });

@@ -13,7 +13,7 @@ interface Props {
   price: number;
 
   finalPrice: number;
-  quantity?: number;
+  
   onRemove: () => void;
 }
 
@@ -28,7 +28,7 @@ export const CheckoutItem = ({
   price,
 
   finalPrice,
-  quantity = 1,
+  
   onRemove
 }: Props) => {
   return (
@@ -67,10 +67,7 @@ export const CheckoutItem = ({
 
       {/* Price + remove */}
       <div className="py-4 flex flex-col justify-between items-end">
-        <div className="font-light">
-          <p>Quantity-{quantity}</p>
-          <p>Price-{formatCurrency(price)}</p>
-        </div>
+        
         <div className="font-medium">
           <p className="text-lg">Item Total {formatCurrency(finalPrice)}</p>
         </div>

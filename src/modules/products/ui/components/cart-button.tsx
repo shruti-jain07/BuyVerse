@@ -6,10 +6,9 @@ interface Props {
     tenantSlug: string;
     productId: string;
     variantId?: string;
-    quantity?: number;
     isPurchased?: boolean;
 }
-export const CartButton = ({ tenantSlug, productId, variantId, quantity, isPurchased }: Props) => {
+export const CartButton = ({ tenantSlug, productId, variantId, isPurchased }: Props) => {
     const cart = useCart(tenantSlug);
     if (isPurchased) {
         return (
@@ -28,7 +27,7 @@ export const CartButton = ({ tenantSlug, productId, variantId, quantity, isPurch
         <Button
             variant="elevated"
             className={cn("flex-1 bg-[#EEF1DA]", cart.isProductInCart(productId, variantId) && "bg-white")}
-            onClick={() => cart.toggleProduct(productId, variantId, undefined, quantity)}
+            onClick={() => cart.toggleProduct(productId, variantId)}
         >
             {cart.isProductInCart(productId, variantId)
                 ? "Remove from cart"

@@ -254,7 +254,6 @@ export interface Product {
     [k: string]: unknown;
   } | null;
   price: number;
-  stock?: number | null;
   isAvailable?: boolean | null;
   category?: (string | null) | Category;
   tags?: (string | Tag)[] | null;
@@ -294,7 +293,6 @@ export interface Product {
         label: string;
         options?: (string | VariantOption)[] | null;
         price?: number | null;
-        stock?: number | null;
         id?: string | null;
       }[]
     | null;
@@ -356,7 +354,6 @@ export interface Order {
     variantId?: string | null;
     name: string;
     variantLabel?: string | null;
-    quantity: number;
     /**
      * Price per item at the time of purchase
      */
@@ -549,7 +546,6 @@ export interface ProductsSelect<T extends boolean = true> {
   name?: T;
   description?: T;
   price?: T;
-  stock?: T;
   isAvailable?: T;
   category?: T;
   tags?: T;
@@ -564,7 +560,6 @@ export interface ProductsSelect<T extends boolean = true> {
         label?: T;
         options?: T;
         price?: T;
-        stock?: T;
         id?: T;
       };
   updatedAt?: T;
@@ -630,7 +625,6 @@ export interface OrdersSelect<T extends boolean = true> {
         variantId?: T;
         name?: T;
         variantLabel?: T;
-        quantity?: T;
         unitPrice?: T;
         finalPrice?: T;
         id?: T;

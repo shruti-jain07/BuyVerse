@@ -57,12 +57,6 @@ export const Orders: CollectionConfig = {
                         required: false,
                     },
                     {
-                        name: "quantity",
-                        type: "number",
-                        required: true,
-                        defaultValue: 1,
-                    },
-                    {
                         name: "unitPrice",
                         type: "number",
                         required: true,

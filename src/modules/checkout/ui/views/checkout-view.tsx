@@ -25,7 +25,7 @@ export const CheckoutView = ({ tenantSlug }: Props) => {
   const { data, error, isLoading } = useQuery(
     trpc.checkout.getProducts.queryOptions({
       items,
-      //passing full cart items (productId, variantId, quantity)      
+      //passing full cart items (productId, variantId)      
     })
   );
 
@@ -111,8 +111,7 @@ export const CheckoutView = ({ tenantSlug }: Props) => {
                 tenantName={product.tenant.name}
                 variantName={product.selectedVariant?.name}
                 price={product.unitPrice}//item's unitPrice
-                finalPrice={product.finalPrice}//finalPrice is per item's price according to quantity ,finalPrice=unitPrice*quantity
-                quantity={product.quantity}
+                finalPrice={product.finalPrice}
                 onRemove={() =>
                   removeProduct(product.id, product.selectedVariant?.id ?? undefined)
                 }
@@ -131,7 +130,7 @@ export const CheckoutView = ({ tenantSlug }: Props) => {
                 items: items.map((item) => ({
                   productId: item.productId,
                   variantId: item.variantId || undefined, // safe optional
-                  quantity: item.quantity??1,
+                  
                 })),
               });
             }}

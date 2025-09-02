@@ -31,11 +31,7 @@ export const Products: CollectionConfig = {
             type: "number",
             required: true
         },
-        {
-            name: "stock",
-            type: "number",
-            defaultValue: 0,
-        },
+       
         {
             name: "isAvailable",
             type: "checkbox",
@@ -110,10 +106,7 @@ export const Products: CollectionConfig = {
                     name: "price",
                     type: "number",
                 },
-                {
-                    name: "stock",
-                    type: "number",
-                },
+               
                 
                
             ],

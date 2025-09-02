@@ -18,4 +18,4 @@ export const generateAuthCookie=async({
                 secure:process.env.NODE_ENV==="production"
 
             })
-}
+}shop-verse-flame.vercel.app

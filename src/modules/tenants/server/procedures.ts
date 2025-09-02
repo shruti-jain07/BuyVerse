@@ -1,6 +1,5 @@
 import z from 'zod';
 import { baseProcedure, createTRPCRouter } from "@/trpc/init";
-import { DEFAULT_LIMIT } from '@/constants';
 import { TRPCError } from '@trpc/server';
 import { Media,Tenant } from '@/payload-types';
 

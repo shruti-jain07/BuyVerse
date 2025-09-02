@@ -4,7 +4,7 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { loadProductFilters } from "@/modules/products/search-params";
 import { ProductListView } from "@/modules/products/ui/views/product-list-view";
 import { DEFAULT_LIMIT } from "@/constants";
-import { ProductSort } from "@/modules/products/ui/components/product-sort";
+export const dynamic = "force-dynamic";
 interface Props {
   params: Promise<{
     category: string;
@@ -23,7 +23,7 @@ const Page = async ({ params,searchParams }: Props) => {
   }));
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      {/*<ProductSort/>*/}
+      
       <ProductListView category={category}/>
     </HydrationBoundary>
   )

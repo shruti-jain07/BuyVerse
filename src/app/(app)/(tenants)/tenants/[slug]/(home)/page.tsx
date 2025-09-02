@@ -4,6 +4,7 @@ import { loadProductFilters } from "@/modules/products/search-params";
 import {getQueryClient, trpc} from "@/trpc/server";
 import { DEFAULT_LIMIT } from "@/constants";
 import {dehydrate,HydrationBoundary} from "@tanstack/react-query";
+export const dynamic = "force-dynamic";
 interface Props{
     searchParams:Promise<SearchParams>;
     params:Promise<{slug:string}>;

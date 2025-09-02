@@ -17,8 +17,6 @@ import { toast } from "sonner";
 const CartButton = dynamic(
     () => import("../components/cart-button").then(
         (mod) => mod.CartButton,
-
-
     ),
     {
         ssr: false,
@@ -32,13 +30,12 @@ interface Props {
     quantity?: number;
 };
 
-
-export const ProductView = ({ productId, tenantSlug, variantId }: Props) => {
+export const ProductView = ({ productId, tenantSlug}: Props) => {
     const cart = useCart(tenantSlug);
     const trpc = useTRPC();
     const [isCopied, setIsCopied] = useState(false)
     const { data } = useSuspenseQuery(trpc.products.getOne.queryOptions({ id: productId }))
-    const [selectedVariant, setSelectedVariant] = useState<any | null>(null);
+    const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null);
     const mappedVariants: Variant[] = (data?.variants || []).map((v) => ({
         id: v.id ?? "", // fallback if id is null
         price: v.price ?? data.price ?? 0,

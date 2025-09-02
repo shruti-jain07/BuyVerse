@@ -54,7 +54,7 @@ export const libraryRouter = createTRPCRouter({
         })
         )
 
-        .query(async ({ ctx, input }) => {
+        .query(async ({ ctx,input}) => {
             {/**data */ }
             const data = await ctx.payload.find({
                 collection: 'orders',

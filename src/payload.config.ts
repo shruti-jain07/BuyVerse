@@ -59,7 +59,6 @@ export default buildConfig({
     }),
     vercelBlobStorage({
       enabled:true,
-      
       collections:{
         media:true
       },

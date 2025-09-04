@@ -9,7 +9,6 @@ import { buildConfig } from 'payload'
 import { Config } from './payload-types'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
-
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Categories } from './collections/Categories'
@@ -59,6 +58,7 @@ export default buildConfig({
     }),
     vercelBlobStorage({
       enabled:true,
+      clientUploads:true,
       collections:{
         media:true
       },

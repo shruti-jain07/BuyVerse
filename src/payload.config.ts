@@ -49,7 +49,7 @@ export default buildConfig({
     multiTenantPlugin<Config>({
       collections:{
         products:{},
-       
+        media:{},
       },
       tenantsArrayField:{
         includeDefaultField:false,

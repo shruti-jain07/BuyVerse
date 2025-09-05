@@ -175,6 +175,7 @@ export const checkoutRouter = createTRPCRouter({
                 } as ProductMetadata,
               },
             },
+             quantity: 1,
           };
         });
 
